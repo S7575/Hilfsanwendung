@@ -18,18 +18,7 @@ dropdown_values = ['ww', 'x']
 # GridOptionen erstellen
 gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, editable=True)
-gb.configure_column("B", cellEditor='agSelectCellEditor', cellEditorParams={"values": dropdown_values}, onCellValueChanged="""
-function(params) {
-    if(params.newValue == 'ww') {
-        params.node.setDataValue('R', 'K');
-        params.node.setDataValue('TP', 'V');
-    }
-    if(params.newValue == 'x') {
-        params.node.setDataValue('R', 'E');
-        params.node.setDataValue('TP', 'E');
-    }
-}
-""")
+gb.configure_column("B", cellEditor='agSelectCellEditor', cellEditorParams={"values": dropdown_values})
 gridOptions = gb.build()
 
 # Erstellen Sie das Grid
@@ -44,3 +33,8 @@ response = AgGrid(
 
 # Der aktualisierte DataFrame wird in response['data'] gespeichert.
 df = response['data']
+
+if st.button('Update Data'):
+    df.loc[df['B'] == 'ww', ['R', 'TP']] = 'K', 'V'
+    df.loc[df['B'] == 'x', ['R', 'TP']] = 'E', 'E'
+    st.dataframe(df)
