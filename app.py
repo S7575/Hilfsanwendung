@@ -14,13 +14,11 @@ df = df.rename(columns={'index': 'Zähne'})
 
 # Konfigurieren Sie das Gitter
 gb = GridOptionsBuilder()
-gb.set_default_editable(True)  # Stellen Sie dies auf 'True' um alle Zellen bearbeitbar zu machen
-gb.set_column_def("B", editable=True)  # Dies ermöglicht die Bearbeitung speziell für die Spalte 'B'
+gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, editable=True)
 gridOptions = gb.build()
 
 # Erstellen Sie das Grid
-response = AgGrid(df, gridOptions=gridOptions)
+response = AgGrid(df, gridOptions=gridOptions, editable=True, height=600)
 
 # Der aktualisierte DataFrame wird in response['data'] gespeichert.
 df = response['data']
-
