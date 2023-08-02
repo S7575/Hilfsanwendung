@@ -29,7 +29,7 @@ grid_options = {
 
 # Create AgGrid
 response = AgGrid(
-    df,
+    df.reset_index().rename(columns={'index':' '}),  # display index in a separate column
     gridOptions=grid_options,
     height=600,
     width='100%',
@@ -37,24 +37,19 @@ response = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
-    retain_index=True,  # Added this line
 )
 
 # If the grid's data has been updated...
 if st.button('Update Tabel'):
     if response['data'] is not None:
-        df = response['data']
-        df.index = ['B', 'R', 'TP']  # Reset the index names
-        # Update 'R' and 'TP' rows based on the value in the 'B' row
+        updated_df = response['data'].set_index(' ')
         for tooth in teeth:
-            if df.loc['B', str(tooth)] == 'ww':
-                df.loc['R', str(tooth)] = 'KV'
-                df.loc['TP', str(tooth)] = 'KV'
-            elif df.loc['B', str(tooth)] == 'x':
-                df.loc['R', str(tooth)] = 'E'
-                df.loc['TP', str(tooth)] = 'E'
-        # Add index as a separate column
-        df.reset_index(inplace=True)
-        df.rename(columns={'index': 'Index'}, inplace=True)
+            if updated_df.loc['B', str(tooth)] == 'ww':
+                updated_df.loc['R', str(tooth)] = 'KV'
+                updated_df.loc['TP', str(tooth)] = 'KV'
+            elif updated_df.loc['B', str(tooth)] == 'x':
+                updated_df.loc['R', str(tooth)] = 'E'
+                updated_df.loc['TP', str(tooth)] = 'E'
+
         # Display final table with AgGrid
-        AgGrid(df, editable=False, height=200, width='50%')
+        AgGrid(updated_df.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True)
