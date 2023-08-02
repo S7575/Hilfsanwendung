@@ -37,4 +37,11 @@ df = response['data']
 if st.button('Update Data'):
     df.loc[df['B'] == 'ww', ['R', 'TP']] = 'K', 'V'
     df.loc[df['B'] == 'x', ['R', 'TP']] = 'E', 'E'
+    
+    # Prüfen Sie, ob es Zähne mit dem Befund 'ww' gibt
+    ww_teeth = df[df['B'] == 'ww']
+    
+    if not ww_teeth.empty:
+        st.write(f'Für die Zähne {", ".join(map(str, ww_teeth["Zähne"].tolist()))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
+    
     st.dataframe(df)
