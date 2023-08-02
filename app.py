@@ -27,6 +27,16 @@ grid_options = {
     ]
 }
 
+st.markdown("""
+<style>
+.ag-header-cell-label .ag-header-cell-text {
+    font-size: 20px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
 # Create AgGrid
 response = AgGrid(
     df.reset_index().rename(columns={'index':' '}),  # display index in a separate column
