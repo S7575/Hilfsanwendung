@@ -13,10 +13,6 @@ def app():
         # Legen Sie das DataFrame zurück
         st.session_state.df.reset_index(inplace=True)
         st.session_state.df = st.session_state.df.rename(columns={'index': 'Zähne'})
-        st.session_state.df = st.session_state.df.set_index('Zähne').transpose()
-
-        # Konvertieren Sie Spaltennamen in Zeichenketten
-        st.session_state.df.columns = st.session_state.df.columns.astype(str)
 
     # Optionen für das Dropdown-Menü
     dropdown_values = ['ww', 'x']
@@ -27,7 +23,10 @@ def app():
     gb.configure_column("B", cellEditor='agSelectCellEditor', cellEditorParams={"values": dropdown_values})
     gridOptions = gb.build()
 
-    # Erstellen Sie das Grid
+    # Erstellen Sie einen Platzhalter für das Grid
+    grid_placeholder = st.empty()
+
+    # Füllen Sie den Platzhalter mit dem Grid
     response = AgGrid(
         st.session_state.df, 
         gridOptions=gridOptions,
@@ -35,26 +34,29 @@ def app():
         data_return_mode=DataReturnMode.AS_INPUT,
         update_mode='VALUE_CHANGED',
         editable=True,
+        key='grid1'
     )
 
     # Aktualisieren Sie den DataFrame in der Sitzung mit den zurückgegebenen Daten
-    st.session_state.df = response['data'].transpose()
+    st.session_state.df = response['data']
 
     if st.button('Update Data'):
-        for tooth in teeth_numbers:
-            if st.session_state.df.loc['B', str(tooth)] == 'ww':
-                st.session_state.df.loc['R', str(tooth)] = 'K'
-                st.session_state.df.loc['TP', str(tooth)] = 'V'
-            elif st.session_state.df.loc['B', str(tooth)] == 'x':
-                st.session_state.df.loc['R', str(tooth)] = 'E'
-                st.session_state.df.loc['TP', str(tooth)] = 'E'
+        st.session_state.df.loc[st.session_state.df['B'] == 'ww', ['R', 'TP']] = 'K', 'V'
+        st.session_state.df.loc[st.session_state.df['B'] == 'x', ['R', 'TP']] = 'E', 'E'
 
         # Prüfen Sie, ob es Zähne mit dem Befund 'ww' gibt
-        ww_teeth = [col for col, val in st.session_state.df.loc['B'].items() if val == 'ww']
+        ww_teeth = st.session_state.df[st.session_state.df['B'] == 'ww']
+        
+        if not ww_teeth.empty:
+            st.write(f'Für die Zähne {", ".join(map(str, ww_teeth["Zähne"].tolist()))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
 
-        if ww_teeth:
-            st.write(f'Für die Zähne {", ".join(map(str, ww_teeth))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
+        # Umstrukturierung des DataFrames
+        df_pivot = st.session_state.df.pivot_table(index=['B', 'R', 'TP'], columns='Zähne', aggfunc='first')
+        df_pivot.reset_index(inplace=True)
+        st.session_state.df = df_pivot.rename_axis(None, axis=1)
 
-        st.dataframe(st.session_state.df)
+        # Ersetzen Sie das Grid mit dem aktualisierten DataFrame
+        grid_placeholder.empty()
+        AgGrid(st.session_state.df, gridOptions=gridOptions, key='grid2')
 
 app()
