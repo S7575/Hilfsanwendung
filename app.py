@@ -33,7 +33,7 @@ def app():
         global_df, 
         gridOptions=gridOptions,
         height=600, 
-        data_return_mode=DataReturnMode.UPDATE_DATA,
+        data_return_mode=DataReturnMode.AS_INPUT,
         update_mode='VALUE_CHANGED',
         editable=True,
     )
