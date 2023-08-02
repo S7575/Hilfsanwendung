@@ -53,5 +53,8 @@ if st.button('Update Tabel'):
             elif df.loc['B', str(tooth)] == 'x':
                 df.loc['R', str(tooth)] = 'E'
                 df.loc['TP', str(tooth)] = 'E'
+        # Add index as a separate column
+        df.reset_index(inplace=True)
+        df.rename(columns={'index': 'Index'}, inplace=True)
         # Display final table with AgGrid
-        AgGrid(df, editable=False)
+        AgGrid(df, editable=False, height=200, width='50%')
