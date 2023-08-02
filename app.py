@@ -49,7 +49,7 @@ grid_options2 = {
 
 # Create AgGrids
 response1 = AgGrid(
-    df1.reset_index().rename(columns={'index':' '}),
+     df1.reset_index().rename(columns={'index':'Indexname'}),
     gridOptions=grid_options1,
     height=150,
     width='100%',
@@ -60,7 +60,7 @@ response1 = AgGrid(
 )
 
 response2 = AgGrid(
-    df2.reset_index().rename(columns={'index':' '}),
+    df2.reset_index().rename(columns={'index':'Indexname'}),
     gridOptions=grid_options2,
     height=150,
     width='100%',
