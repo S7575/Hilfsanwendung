@@ -53,4 +53,5 @@ if st.button('Update Tabel'):
             elif df.loc['B', str(tooth)] == 'x':
                 df.loc['R', str(tooth)] = 'E'
                 df.loc['TP', str(tooth)] = 'E'
-        st.table(df)
+        # Display final table with AgGrid
+        AgGrid(df, editable=False)
