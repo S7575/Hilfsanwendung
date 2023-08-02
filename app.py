@@ -1,62 +1,53 @@
-import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder, DataReturnMode
+from st_aggrid import AgGrid
+import pandas as pd
 
-# Zahnnummern
-teeth_numbers = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
+# Define teeth and dropdown options
+teeth = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
+options = ['ww', 'x']
 
-def app():
-    # Initialisieren Sie ein DataFrame mit Ausgangswerten, falls es nicht existiert
-    if "df" not in st.session_state:
-        st.session_state.df = pd.DataFrame(index=teeth_numbers, columns=['B', 'R', 'TP']).fillna('')
+# Initialize DataFrame
+df = pd.DataFrame(index=['B', 'R', 'TP'], columns=teeth)
+df = df.fillna('')
 
-        # Legen Sie das DataFrame zurück
-        st.session_state.df.reset_index(inplace=True)
-        st.session_state.df = st.session_state.df.rename(columns={'index': 'Zähne'})
+# Configure grid options
+grid_options = {
+    'defaultColDef': {
+        'editable': True,
+        'resizable': True,
+    },
+    'columnDefs': [
+        {
+            'field': str(teeth),
+            'cellEditor': 'agSelectCellEditor',
+            'cellEditorParams': {
+                'values': options
+            }
+        } for teeth in teeth
+    ]
+}
 
-    # Optionen für das Dropdown-Menü
-    dropdown_values = ['ww', 'x']
+# Create AgGrid
+response = AgGrid(
+    df,
+    gridOptions=grid_options,
+    height=600,
+    width='100%',
+    data_return_mode='as_input',
+    update_mode='value_changed',
+    fit_columns_on_grid_load=True,
+    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+)
 
-    # GridOptionen erstellen
-    gb = GridOptionsBuilder.from_dataframe(st.session_state.df)
-    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, editable=True)
-    gb.configure_column("B", cellEditor='agSelectCellEditor', cellEditorParams={"values": dropdown_values})
-    gridOptions = gb.build()
-
-    # Erstellen Sie einen Platzhalter für das Grid
-    grid_placeholder = st.empty()
-
-    # Füllen Sie den Platzhalter mit dem Grid
-    response = AgGrid(
-        st.session_state.df, 
-        gridOptions=gridOptions,
-        height=600, 
-        data_return_mode=DataReturnMode.AS_INPUT,
-        update_mode='VALUE_CHANGED',
-        editable=True,
-        key='grid1'
-    )
-
-    # Aktualisieren Sie den DataFrame in der Sitzung mit den zurückgegebenen Daten
-    st.session_state.df = response['data']
-
-    if st.button('Update Data'):
-        st.session_state.df.loc[st.session_state.df['B'] == 'ww', ['R', 'TP']] = 'K', 'V'
-        st.session_state.df.loc[st.session_state.df['B'] == 'x', ['R', 'TP']] = 'E', 'E'
-
-        # Prüfen Sie, ob es Zähne mit dem Befund 'ww' gibt
-        ww_teeth = st.session_state.df[st.session_state.df['B'] == 'ww']
-        
-        if not ww_teeth.empty:
-            st.write(f'Für die Zähne {", ".join(map(str, ww_teeth["Zähne"].tolist()))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
-
-        # Umstrukturierung des DataFrames
-        df_pivot = st.session_state.df.pivot_table(index=['B', 'R', 'TP'], columns='Zähne', aggfunc='first')
-        df_pivot.reset_index(inplace=True)
-        st.session_state.df = df_pivot.rename_axis(None, axis=1)
-
-        # Ersetzen Sie das Grid mit dem aktualisierten DataFrame
-        grid_placeholder.empty()
-        AgGrid(st.session_state.df, gridOptions=gridOptions, key='grid2')
-
-app()
+# If the grid's data has been updated...
+if response['data'] is not None:
+    df = response['data']
+    # Update 'R' and 'TP' rows based on the value in the 'B' row
+    for tooth in teeth:
+        if df.loc['B', tooth] == 'ww':
+            df.loc['R', tooth] = 'KV'
+            df.loc['TP', tooth] = 'KV'
+        elif df.loc['B', tooth] == 'x':
+            df.loc['R', tooth] = 'E'
+            df.loc['TP', tooth] = 'E'
+    st.table(df)
