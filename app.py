@@ -27,13 +27,14 @@ def app():
     grid_placeholder = st.empty()
 
     # Füllen Sie den Platzhalter mit dem Grid
-    response = grid_placeholder.agGrid(
+    response = AgGrid(
         st.session_state.df, 
         gridOptions=gridOptions,
         height=600, 
         data_return_mode=DataReturnMode.AS_INPUT,
         update_mode='VALUE_CHANGED',
         editable=True,
+        key='grid'
     )
 
     # Aktualisieren Sie den DataFrame in der Sitzung mit den zurückgegebenen Daten
@@ -49,7 +50,8 @@ def app():
         if not ww_teeth.empty:
             st.write(f'Für die Zähne {", ".join(map(str, ww_teeth["Zähne"].tolist()))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
 
-        # Aktualisieren Sie das Grid mit dem aktualisierten DataFrame
-        grid_placeholder.agGrid(st.session_state.df, gridOptions=gridOptions)
+        # Ersetzen Sie das Grid mit dem aktualisierten DataFrame
+        grid_placeholder.empty()
+        AgGrid(st.session_state.df, gridOptions=gridOptions, key='grid')
 
 app()
