@@ -8,7 +8,7 @@ teeth_numbers = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
 def app():
     # Initialisieren Sie ein DataFrame mit Ausgangswerten, falls es nicht existiert
     if "df" not in st.session_state:
-        st.session_state.df = pd.DataFrame(index=teeth_numbers, columns=['Zähne', 'B', 'R', 'TP']).fillna('')
+        st.session_state.df = pd.DataFrame(index=teeth_numbers, columns=['B', 'R', 'TP']).fillna('')
 
         # Legen Sie das DataFrame zurück
         st.session_state.df.reset_index(inplace=True)
