@@ -34,7 +34,7 @@ def app():
         data_return_mode=DataReturnMode.AS_INPUT,
         update_mode='VALUE_CHANGED',
         editable=True,
-        key='grid'
+        key='grid1'
     )
 
     # Aktualisieren Sie den DataFrame in der Sitzung mit den zurückgegebenen Daten
@@ -52,6 +52,6 @@ def app():
 
         # Ersetzen Sie das Grid mit dem aktualisierten DataFrame
         grid_placeholder.empty()
-        AgGrid(st.session_state.df, gridOptions=gridOptions, key='grid')
+        AgGrid(st.session_state.df, gridOptions=gridOptions, key='grid2')
 
 app()
