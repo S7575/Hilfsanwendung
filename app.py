@@ -15,6 +15,9 @@ def app():
         st.session_state.df = st.session_state.df.rename(columns={'index': 'Zähne'})
         st.session_state.df = st.session_state.df.set_index('Zähne').transpose()
 
+        # Konvertieren Sie Spaltennamen in Zeichenketten
+        st.session_state.df.columns = st.session_state.df.columns.astype(str)
+
     # Optionen für das Dropdown-Menü
     dropdown_values = ['ww', 'x']
 
@@ -39,12 +42,12 @@ def app():
 
     if st.button('Update Data'):
         for tooth in teeth_numbers:
-            if st.session_state.df.loc['B', tooth] == 'ww':
-                st.session_state.df.loc['R', tooth] = 'K'
-                st.session_state.df.loc['TP', tooth] = 'V'
-            elif st.session_state.df.loc['B', tooth] == 'x':
-                st.session_state.df.loc['R', tooth] = 'E'
-                st.session_state.df.loc['TP', tooth] = 'E'
+            if st.session_state.df.loc['B', str(tooth)] == 'ww':
+                st.session_state.df.loc['R', str(tooth)] = 'K'
+                st.session_state.df.loc['TP', str(tooth)] = 'V'
+            elif st.session_state.df.loc['B', str(tooth)] == 'x':
+                st.session_state.df.loc['R', str(tooth)] = 'E'
+                st.session_state.df.loc['TP', str(tooth)] = 'E'
 
         # Prüfen Sie, ob es Zähne mit dem Befund 'ww' gibt
         ww_teeth = [col for col, val in st.session_state.df.loc['B'].items() if val == 'ww']
