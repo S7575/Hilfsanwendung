@@ -18,12 +18,12 @@ grid_options = {
     },
     'columnDefs': [
         {
-            'field': str(teeth),
+            'field': str(tooth),
             'cellEditor': 'agSelectCellEditor',
             'cellEditorParams': {
                 'values': options
             }
-        } for teeth in teeth
+        } for tooth in teeth
     ]
 }
 
@@ -37,6 +37,7 @@ response = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    retain_index=True,  # Added this line
 )
 
 # If the grid's data has been updated...
@@ -45,10 +46,10 @@ if st.button('Update Tabel'):
         df = response['data']
         # Update 'R' and 'TP' rows based on the value in the 'B' row
         for tooth in teeth:
-            if df.loc['B', str(tooth)] == 'ww':
-                df.loc['R', str(tooth)] = 'KV'
-                df.loc['TP', str(tooth)] = 'KV'
-            elif df.loc['B', str(tooth)] == 'x':
-                df.loc['R', str(tooth)] = 'E'
-                df.loc['TP', str(tooth)] = 'E'
+            if df.loc['B', tooth] == 'ww':
+                df.loc['R', tooth] = 'KV'
+                df.loc['TP', tooth] = 'KV'
+            elif df.loc['B', tooth] == 'x':
+                df.loc['R', tooth] = 'E'
+                df.loc['TP', tooth] = 'E'
         st.table(df)
