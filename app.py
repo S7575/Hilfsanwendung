@@ -4,7 +4,7 @@ import pandas as pd
 
 # Define teeth and dropdown options
 teeth1 = [18,17,16,15,14,13,12,11]
-teeth2 = [21,22,23,24,25,26,27,28]
+teeth2 = [28,27,26,25,24,23,22,21]
 options = ['ww', 'x']
 
 # Initialize DataFrames
@@ -14,8 +14,8 @@ df1 = df1.fillna('')
 df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth2])
 df2 = df2.fillna('')
 
-# Configure grid options
-grid_options = {
+# Configure grid options for both dataframes
+grid_options1 = {
     'defaultColDef': {
         'editable': True,
         'resizable': True,
@@ -27,14 +27,30 @@ grid_options = {
             'cellEditorParams': {
                 'values': options
             }
-        } for tooth in teeth1 + teeth2
+        } for tooth in teeth1
+    ]
+}
+
+grid_options2 = {
+    'defaultColDef': {
+        'editable': True,
+        'resizable': True,
+    },
+    'columnDefs': [
+        {
+            'field': str(tooth),
+            'cellEditor': 'agSelectCellEditor',
+            'cellEditorParams': {
+                'values': options
+            }
+        } for tooth in teeth2
     ]
 }
 
 # Create AgGrids
 response1 = AgGrid(
     df1.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
+    gridOptions=grid_options1,
     height=200,
     width='100%',
     data_return_mode='as_input',
@@ -45,7 +61,7 @@ response1 = AgGrid(
 
 response2 = AgGrid(
     df2.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
+    gridOptions=grid_options2,
     height=200,
     width='100%',
     data_return_mode='as_input',
