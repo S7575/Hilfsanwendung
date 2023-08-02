@@ -8,7 +8,7 @@ teeth_numbers = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
 def app():
     # Initialisieren Sie ein DataFrame mit Ausgangswerten, falls es nicht existiert
     if "df" not in st.session_state:
-        st.session_state.df = pd.DataFrame(index=teeth_numbers, columns=['B', 'R', 'TP']).fillna('')
+        st.session_state.df = pd.DataFrame(index=teeth_numbers, columns=['Zähne', 'B', 'R', 'TP']).fillna('')
 
         # Legen Sie das DataFrame zurück
         st.session_state.df.reset_index(inplace=True)
@@ -23,8 +23,11 @@ def app():
     gb.configure_column("B", cellEditor='agSelectCellEditor', cellEditorParams={"values": dropdown_values})
     gridOptions = gb.build()
 
-    # Erstellen Sie das Grid
-    response = AgGrid(
+    # Erstellen Sie einen Platzhalter für das Grid
+    grid_placeholder = st.empty()
+
+    # Füllen Sie den Platzhalter mit dem Grid
+    response = grid_placeholder.agGrid(
         st.session_state.df, 
         gridOptions=gridOptions,
         height=600, 
@@ -46,6 +49,7 @@ def app():
         if not ww_teeth.empty:
             st.write(f'Für die Zähne {", ".join(map(str, ww_teeth["Zähne"].tolist()))} wurde der Befund "ww" festgestellt. Befund 1.1 wird benötigt.')
 
-        st.dataframe(st.session_state.df)
+        # Aktualisieren Sie das Grid mit dem aktualisierten DataFrame
+        grid_placeholder.agGrid(st.session_state.df, gridOptions=gridOptions)
 
 app()
