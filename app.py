@@ -7,7 +7,7 @@ teeth = [18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28]
 options = ['ww', 'x']
 
 # Initialize DataFrame
-df = pd.DataFrame(index=['B', 'R', 'TP'], columns=teeth)
+df = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth])
 df = df.fillna('')
 
 # Configure grid options
@@ -46,10 +46,10 @@ if st.button('Update Tabel'):
         df = response['data']
         # Update 'R' and 'TP' rows based on the value in the 'B' row
         for tooth in teeth:
-            if df.loc['B', tooth] == 'ww':
-                df.loc['R', tooth] = 'KV'
-                df.loc['TP', tooth] = 'KV'
-            elif df.loc['B', tooth] == 'x':
-                df.loc['R', tooth] = 'E'
-                df.loc['TP', tooth] = 'E'
+            if df.loc['B', str(tooth)] == 'ww':
+                df.loc['R', str(tooth)] = 'KV'
+                df.loc['TP', str(tooth)] = 'KV'
+            elif df.loc['B', str(tooth)] == 'x':
+                df.loc['R', str(tooth)] = 'E'
+                df.loc['TP', str(tooth)] = 'E'
         st.table(df)
