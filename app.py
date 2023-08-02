@@ -31,14 +31,14 @@ grid_options = {
 
 # Create AgGrid
 response = AgGrid(
-    df.reset_index().rename(columns={'index':' '}),  # display index in a separate column
+    df.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options,
-    height=600,
+    height=200,
     width='100%',
     data_return_mode='as_input',
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    allow_unsafe_js_code=True,
 )
 
 # If the grid's data has been updated...
