@@ -27,21 +27,6 @@ grid_options = {
     ]
 }
 
-st.markdown("""
-<style>
-.ag-header-cell-label .ag-header-cell-text {
-    font-size: 20px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<style>
-.ag-header-cell-menu-button {
-    display: none;
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 # Create AgGrid
