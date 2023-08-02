@@ -44,6 +44,7 @@ response = AgGrid(
 if st.button('Update Tabel'):
     if response['data'] is not None:
         df = response['data']
+        df.index = ['B', 'R', 'TP']  # Reset the index names
         # Update 'R' and 'TP' rows based on the value in the 'B' row
         for tooth in teeth:
             if df.loc['B', str(tooth)] == 'ww':
