@@ -40,14 +40,15 @@ response = AgGrid(
 )
 
 # If the grid's data has been updated...
-if response['data'] is not None:
-    df = response['data']
-    # Update 'R' and 'TP' rows based on the value in the 'B' row
-    for tooth in teeth:
-        if df.loc['B', tooth] == 'ww':
-            df.loc['R', tooth] = 'KV'
-            df.loc['TP', tooth] = 'KV'
-        elif df.loc['B', tooth] == 'x':
-            df.loc['R', tooth] = 'E'
-            df.loc['TP', tooth] = 'E'
-    st.table(df)
+if st.button('Update Tabel'):
+    if response['data'] is not None:
+        df = response['data']
+        # Update 'R' and 'TP' rows based on the value in the 'B' row
+        for tooth in teeth:
+            if df.loc['B', str(tooth)] == 'ww':
+                df.loc['R', str(tooth)] = 'KV'
+                df.loc['TP', str(tooth)] = 'KV'
+            elif df.loc['B', str(tooth)] == 'x':
+                df.loc['R', str(tooth)] = 'E'
+                df.loc['TP', str(tooth)] = 'E'
+        st.table(df)
