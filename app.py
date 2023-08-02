@@ -35,6 +35,13 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.ag-header-cell-menu-button {
+    display: none;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # Create AgGrid
