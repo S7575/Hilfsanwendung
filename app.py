@@ -5,7 +5,7 @@ import pandas as pd
 # Define teeth and dropdown options
 teeth1 = [11,12,13,14,15,16,17,18]
 teeth2 = [21,22,23,24,25,26,27,28]
-options = ['ww', 'x']
+options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
 # Initialize DataFrame
 df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
@@ -101,5 +101,5 @@ if st.button('Update Tabel'):
                 df.loc['TP', str(tooth)] = 'E'
 
         # Display final table with AgGrid
-        AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True)
-        AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True)
+        AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
+        AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
