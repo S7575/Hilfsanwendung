@@ -13,8 +13,8 @@ df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teet
 df1 = df1.fillna('')
 df2 = df2.fillna('')
 
-# Configure grid options
-grid_options = {
+# Create grid options for each table
+grid_options1 = {
     'defaultColDef': {
         'editable': True,
         'resizable': True,
@@ -33,15 +33,32 @@ grid_options = {
             'cellEditorParams': {
                 'values': options
             }
-        } for tooth in teeth1+teeth2
+        } for tooth in teeth1
     ]
 }
+
+grid_options2 = grid_options1.copy()
+grid_options2['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth2
+]
 
 # Create AgGrid
 response1 = AgGrid(
     df1.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
-    height=300,
+    gridOptions=grid_options1,
+    height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
@@ -51,8 +68,8 @@ response1 = AgGrid(
 
 response2 = AgGrid(
     df2.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
-    height=300,
+    gridOptions=grid_options2,
+    height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
@@ -65,12 +82,17 @@ if st.button('Update Tabel'):
     if response1['data'] is not None and response2['data'] is not None:
         updated_df1 = response1['data'].set_index(' ')
         updated_df2 = response2['data'].set_index(' ')
-        for tooth in teeth1+teeth2:
-            if str(tooth) in updated_df1.columns:
-                df = updated_df1
-            else:
-                df = updated_df2
+        for tooth in teeth1:
+            df = updated_df1
+            if df.loc['B', str(tooth)] == 'ww':
+                df.loc['R', str(tooth)] = 'KV'
+                df.loc['TP', str(tooth)] = 'KV'
+            elif df.loc['B', str(tooth)] == 'x':
+                df.loc['R', str(tooth)] = 'E'
+                df.loc['TP', str(tooth)] = 'E'
 
+        for tooth in teeth2:
+            df = updated_df2
             if df.loc['B', str(tooth)] == 'ww':
                 df.loc['R', str(tooth)] = 'KV'
                 df.loc['TP', str(tooth)] = 'KV'
