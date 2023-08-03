@@ -27,34 +27,29 @@ if 'df4' not in st.session_state:
     st.session_state['df4'] = df4
 
 # Create grid options for each table
-gb = GridOptionsBuilder.from_dataframe(st.session_state.df1)
-gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+gb1 = GridOptionsBuilder.from_dataframe(st.session_state.df1)
+gb2 = GridOptionsBuilder.from_dataframe(st.session_state.df2)
+gb3 = GridOptionsBuilder.from_dataframe(st.session_state.df3)
+gb4 = GridOptionsBuilder.from_dataframe(st.session_state.df4)
 
-# Configure dropdown for each column
-for tooth in teeth1:
-    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+grid_builders = [gb1, gb2, gb3, gb4]
+teeth = [teeth1, teeth2, teeth3, teeth4]
 
-# Configure dropdown for each column
-for tooth in teeth2:
-    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+for gb, tooth_group in zip(grid_builders, teeth):
+    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+    for tooth in tooth_group:
+        gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 
-# Configure dropdown for each column
-for tooth in teeth3:
-    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-
-# Configure dropdown for each column
-for tooth in teeth4:
-    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-
-
-
-grid_options = gb.build()
+grid_options1 = gb1.build()
+grid_options2 = gb2.build()
+grid_options3 = gb3.build()
+grid_options4 = gb4.build()
 
 # Display the AgGrid
 st.header("Tabelle 1")
 response = AgGrid(
     st.session_state.df1,
-    gridOptions=grid_options,
+    gridOptions=grid_options1,
     height=200, 
     width='100%',
     data_return_mode='as_input', 
@@ -64,47 +59,7 @@ response = AgGrid(
     key='grid1'
 )
 
-# Display the AgGrid
-st.header("Tabelle 2")
-response2 = AgGrid(
-    st.session_state.df1,
-    gridOptions=grid_options,
-    height=200, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
-    fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid2'
-)
-
-# Display the AgGrid
-st.header("Tabelle 3")
-response3 = AgGrid(
-    st.session_state.df1,
-    gridOptions=grid_options,
-    height=200, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
-    fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid3'
-)
-
-# Display the AgGrid
-st.header("Tabelle 4")
-response4 = AgGrid(
-    st.session_state.df1,
-    gridOptions=grid_options,
-    height=200, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
-    fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid4'
-)
+# Repeat the same for other tables with their corresponding grid options...
 
 # Check if the button is pressed
 if st.button('Befund aktualisieren'):
