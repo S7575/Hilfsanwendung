@@ -78,27 +78,33 @@ response2 = AgGrid(
 )
 
 # If the grid's data has been updated...
-if st.button('Update Tabel'):
-    if response1['data'] is not None and response2['data'] is not None:
+if st.button('Befund aktualisieren'):
+    if response1['data'] is not None:
         updated_df1 = response1['data'].set_index(' ')
-        updated_df2 = response2['data'].set_index(' ')
-        for tooth in teeth1:
-            df = updated_df1
-            if df.loc['B', str(tooth)] == 'ww':
-                df.loc['R', str(tooth)] = 'KV'
-                df.loc['TP', str(tooth)] = 'KV'
-            elif df.loc['B', str(tooth)] == 'x':
-                df.loc['R', str(tooth)] = 'E'
-                df.loc['TP', str(tooth)] = 'E'
+        # Check if there is any input in 'B' row
+        if not updated_df1.loc['B'].eq('').all():  # if all are empty strings, we assume there's no input
+            for tooth in teeth1:
+                if updated_df1.loc['B', str(tooth)] == 'ww':
+                    updated_df1.loc['R', str(tooth)] = 'KV'
+                    updated_df1.loc['TP', str(tooth)] = 'KV'
+                elif updated_df1.loc['B', str(tooth)] == 'x':
+                    updated_df1.loc['R', str(tooth)] = 'E'
+                    updated_df1.loc['TP', str(tooth)] = 'E'
 
-        for tooth in teeth2:
-            df = updated_df2
-            if df.loc['B', str(tooth)] == 'ww':
-                df.loc['R', str(tooth)] = 'KV'
-                df.loc['TP', str(tooth)] = 'KV'
-            elif df.loc['B', str(tooth)] == 'x':
-                df.loc['R', str(tooth)] = 'E'
-                df.loc['TP', str(tooth)] = 'E'
+            # Display final table with AgGrid
+            AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
+
+    if response2['data'] is not None:
+        updated_df2 = response2['data'].set_index(' ')
+        # Check if there is any input in 'B' row
+        if not updated_df2.loc['B'].eq('').all():  # if all are empty strings, we assume there's no input
+            for tooth in teeth2:
+                if updated_df2.loc['B', str(tooth)] == 'ww':
+                    updated_df2.loc['R', str(tooth)] = 'KV'
+                    updated_df2.loc['TP', str(tooth)] = 'KV'
+                elif updated_df2.loc['B', str(tooth)] == 'x':
+                    updated_df2.loc['R', str(tooth)] = 'E'
+                    updated_df2.loc['TP', str(tooth)] = 'E'
 
         # Display final table with AgGrid
         AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
