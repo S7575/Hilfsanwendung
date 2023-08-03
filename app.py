@@ -11,16 +11,10 @@ teeth4 = [41,42,43,44,45,46,47,48]
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
 # Initialize DataFrames and add a row label column
-df1 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth1]).fillna('')
-df2 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth2]).fillna('')
-df3 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth3]).fillna('')
-df4 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth4]).fillna('')
-
-# Assign initial row with row label as 'B'
-df1 = df1.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
-df2 = df2.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth2}}), ignore_index=True)
-df3 = df3.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth3}}), ignore_index=True)
-df4 = df4.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth4}}), ignore_index=True)
+df1 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth1}})
+df2 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth2}})
+df3 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth3}})
+df4 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth4}})
 
 # Check if session state already has the dataframes, if not assign them
 if 'df1' not in st.session_state:
