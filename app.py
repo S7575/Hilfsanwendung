@@ -1,7 +1,7 @@
 import streamlit as st
 from st_aggrid import AgGrid
 import pandas as pd
-from streamlit.session_state import SessionState
+
 
 
 # Define teeth and dropdown options
@@ -13,7 +13,7 @@ teeth4 = [41,42,43,44,45,46,47,48]
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
 # Get session state
-session_state = SessionState.get(b_row_selected=False)
+session_state = st.session_state(b_row_selected=False)
 
 # Initialize DataFrame
 df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
