@@ -120,6 +120,9 @@ if st.button('Befund aktualisieren'):
         B_series = pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in tooth_set}}, name='B')
         st.session_state[df_name] = pd.concat([st.session_state[df_name], TP_series, B_series])
         
+        # Ensure all column names are strings
+        st.session_state[df_name].columns = st.session_state[df_name].columns.astype(str)
+        
     # Display the updated tables
     st.header("Aktualisierte Tabelle 1")
     AgGrid(st.session_state.df1)
@@ -132,3 +135,4 @@ if st.button('Befund aktualisieren'):
 
     st.header("Aktualisierte Tabelle 4")
     AgGrid(st.session_state.df4)
+
