@@ -120,10 +120,11 @@ def update_values(df, teeth_set):
     for col in df.columns:
         if col != 'B':
             B_value = df.loc['B', col]
-            if B_value == 'ww':
+            if (B_value == 'ww').any():  # Use .any() to check if any elements in the Series are 'ww'
                 df.loc['R', col] = 'KV'
                 df.loc['TP', col] = 'KV'
     return df
+
 
 # Check if the button is pressed
 if st.button('Befund aktualisieren', key='button1'):
