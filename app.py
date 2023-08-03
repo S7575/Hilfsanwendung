@@ -73,7 +73,7 @@ grid_options3['columnDefs'] = [
         'cellEditorParams': {
             'values': options
         }
-    } for tooth in teeth2
+    } for tooth in teeth3
 ]
 
 grid_options4 = grid_options1.copy()
@@ -90,7 +90,7 @@ grid_options4['columnDefs'] = [
         'cellEditorParams': {
             'values': options
         }
-    } for tooth in teeth2
+    } for tooth in teeth4
 ]
 
 
