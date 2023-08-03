@@ -11,29 +11,14 @@ teeth4 = [41,42,43,44,45,46,47,48]
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
 # Initialize DataFrame
-df1 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth1])
-df2 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth2])
-df3 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth3])
-df4 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth4])
+df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
+df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth2])
+df3 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth3])
+df4 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth4])
 df1 = df1.fillna('')
 df2 = df2.fillna('')
 df3 = df3.fillna('')
 df4 = df4.fillna('')
-
-# Festlegung von Werten für R und TP, die in den neuen tabellen abgerufen werden
-
-df1.loc['R'] = ''
-df1.loc['TP'] = ''
-
-df2.loc['R'] = ''
-df2.loc['TP'] = ''
-
-df3.loc['R'] = ''
-df3.loc['TP'] = ''
-
-df4.loc['R'] = ''
-df4.loc['TP'] = ''
-
 
 # Create grid options for each table
 grid_options1 = {
@@ -112,7 +97,6 @@ grid_options4['columnDefs'] = [
 
 
 
-
 # Create AgGrid
 response1 = AgGrid(
     df1.reset_index().rename(columns={'index':' '}),
@@ -174,10 +158,10 @@ if st.button('Befund aktualisieren'):
 
             # Display final table with AgGrid
             AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), 
-                editable=False, 
-                fit_columns_on_grid_load=True, 
-                height=150, 
-                key='AgGrid1')
+                   editable=False, 
+                   fit_columns_on_grid_load=True, 
+                   height=150, 
+                   key='AgGrid1')
 
     if response2['data'] is not None:
         updated_df2 = response2['data'].set_index(' ')
@@ -229,7 +213,7 @@ if st.button('Befund aktualisieren'):
                     updated_df4.loc['TP', str(tooth)] = 'E'
 
             # Display final table with AgGrid
-            AgGrid(updated_df4.reset_index().rename(columns={'index':' '}),
+            AgGrid(updated_df4.reset_index().rename(columns={'index':' '}), 
                    editable=False, 
                    fit_columns_on_grid_load=True, 
                    height=150, 
