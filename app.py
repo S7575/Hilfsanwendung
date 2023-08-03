@@ -115,9 +115,9 @@ if st.button('Befund aktualisieren'):
     st.session_state.df4 = response4['data']
     
     # Add new rows with row labels 'B' and 'TP'
-    for df in [st.session_state.df1, st.session_state.df2, st.session_state.df3, st.session_state.df4]:
-        df = df.append(pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
-        df = df.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
+    for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
+        st.session_state[df_name] = st.session_state[df_name].append(pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in tooth_set}}), ignore_index=True)
+        st.session_state[df_name] = st.session_state[df_name].append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in tooth_set}}), ignore_index=True)
         
     # Display the updated tables
     st.header("Aktualisierte Tabelle 1")
