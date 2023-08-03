@@ -11,10 +11,10 @@ teeth4 = [41,42,43,44,45,46,47,48]
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
 # Initialize DataFrame
-df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
-df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth2])
-df3 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth3])
-df4 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth4])
+df1 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth1])
+df2 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth2])
+df3 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth3])
+df4 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth4])
 df1 = df1.fillna('')
 df2 = df2.fillna('')
 df3 = df3.fillna('')
