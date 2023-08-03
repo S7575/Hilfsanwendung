@@ -116,6 +116,8 @@ def update_values(df, teeth_set):
         TP_series = pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in teeth_set}}, name='TP')
         df = pd.concat([df, TP_series])
 
+    df.sort_index(inplace=True)  # Sort the index after adding new rows
+
     # Update the values of 'R' and 'TP' based on 'B' row value
     for col in df.columns:
         if col != 'B':
@@ -125,6 +127,7 @@ def update_values(df, teeth_set):
                 df.loc['R', col] = 'KV'
                 df.loc['TP', col] = 'KV'
     return df
+
 
 
 
