@@ -10,11 +10,17 @@ teeth4 = [41,42,43,44,45,46,47,48]
 
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
-# Initialize DataFrames
-df1 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth1]).fillna('')
-df2 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth2]).fillna('')
-df3 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth3]).fillna('')
-df4 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth4]).fillna('')
+# Initialize DataFrames and add a row label column
+df1 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth1]).fillna('')
+df2 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth2]).fillna('')
+df3 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth3]).fillna('')
+df4 = pd.DataFrame(columns=["B"]+[str(tooth) for tooth in teeth4]).fillna('')
+
+# Assign initial row with row label as 'B'
+df1 = df1.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
+df2 = df2.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth2}}), ignore_index=True)
+df3 = df3.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth3}}), ignore_index=True)
+df4 = df4.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth4}}), ignore_index=True)
 
 # Check if session state already has the dataframes, if not assign them
 if 'df1' not in st.session_state:
@@ -29,26 +35,26 @@ if 'df4' not in st.session_state:
 # Create grid options for each table
 gb1 = GridOptionsBuilder.from_dataframe(st.session_state.df1)
 gb1.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in teeth1:
+for tooth in ["B"] + teeth1:
     gb1.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options1 = gb1.build()
 
 # Repeat the same for other tables...
 gb2 = GridOptionsBuilder.from_dataframe(st.session_state.df2)
 gb2.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in teeth2:
+for tooth in ["B"] + teeth2:
     gb2.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options2 = gb2.build()
 
 gb3 = GridOptionsBuilder.from_dataframe(st.session_state.df3)
 gb3.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in teeth3:
+for tooth in ["B"] + teeth3:
     gb3.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options3 = gb3.build()
 
 gb4 = GridOptionsBuilder.from_dataframe(st.session_state.df4)
 gb4.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in teeth4:
+for tooth in ["B"] + teeth4:
     gb4.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options4 = gb4.build()
 
@@ -57,7 +63,7 @@ st.header("Tabelle 1")
 response = AgGrid(
     st.session_state.df1,
     gridOptions=grid_options1,
-    height=100, 
+    height=200, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -71,7 +77,7 @@ st.header("Tabelle 2")
 response2 = AgGrid(
     st.session_state.df2,
     gridOptions=grid_options2,
-    height=100, 
+    height=200, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -84,7 +90,7 @@ st.header("Tabelle 3")
 response3 = AgGrid(
     st.session_state.df3,
     gridOptions=grid_options3,
-    height=100, 
+    height=200, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -97,7 +103,7 @@ st.header("Tabelle 4")
 response4 = AgGrid(
     st.session_state.df4,
     gridOptions=grid_options4,
-    height=100, 
+    height=200, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -114,10 +120,10 @@ if st.button('Befund aktualisieren'):
     st.session_state.df3 = response3['data']
     st.session_state.df4 = response4['data']
     
-    # Add new rows 'B' and 'TP'
+    # Add new rows with row labels 'B' and 'TP'
     for df in [st.session_state.df1, st.session_state.df2, st.session_state.df3, st.session_state.df4]:
-        df.loc['TP'] = ""
-        df.loc['B'] = ""
+        df = df.append(pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
+        df = df.append(pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in teeth1}}), ignore_index=True)
         
     # Display the updated tables
     st.header("Aktualisierte Tabelle 1")
