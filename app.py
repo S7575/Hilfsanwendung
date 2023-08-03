@@ -59,6 +59,42 @@ grid_options2['columnDefs'] = [
     } for tooth in teeth2
 ]
 
+grid_options3 = grid_options1.copy()
+grid_options3['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth2
+]
+
+grid_options4 = grid_options1.copy()
+grid_options4['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth2
+]
+
+
+
 # Create AgGrid
 response1 = AgGrid(
     df1.reset_index().rename(columns={'index':' '}),
