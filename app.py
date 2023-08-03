@@ -106,15 +106,30 @@ response4 = AgGrid(
     key='grid4'
 )
 
-# Function to update R and TP values based on dropdown selection
-def update_values(df):
+# Function to add R and TP rows and update their values based on dropdown selection
+def update_values(df, teeth_set):
+    # Add 'R' and 'TP' rows if they don't exist
+    if 'R' not in df.index:
+        R_series = pd.Series({**{'B': 'R'}, **{str(tooth): '' for tooth in teeth_set}}, name='R')
+        df = pd.concat([df, R_series])
+    if 'TP' not in df.index:
+        TP_series = pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in teeth_set}}, name='TP')
+        df = pd.concat([df, TP_series])
+
+    # Update the values of 'R' and 'TP'
     for col in df.columns:
         if col != 'B':
             dropdown_selection = df.loc['R', col]  # Assumes the dropdown selection is stored in row 'R'
-            if dropdown_selection == 'ww':
-                df.loc['R', col] = 'KV'
-                df.loc['TP', col] = 'KV'
+            if dropdown_selection == 'some_option':
+                df.loc['R', col] = 'new_value_for_R'
+                df.loc['TP', col] = 'new_value_for_TP'
     return df
+
+# Check if the button is pressed
+if st.button('Befund aktualisieren'):
+    # If the button is pressed, update the dataframe
+    for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
+        st.session_state[df_name] = update_values(st.session_state[df_name], tooth_set)
 
 # Listen for changes in the dataframe
 if st.button('Befund aktualisieren'):
