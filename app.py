@@ -10,6 +10,9 @@ teeth4 = [41,42,43,44,45,46,47,48]
 
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
+# Get session state
+session_state = SessionState.get(b_row_selected=False)
+
 # Initialize DataFrame
 df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
 df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth2])
@@ -99,51 +102,99 @@ grid_options4['columnDefs'] = [
 
 # Create AgGrid
 response1 = AgGrid(
-    df1.reset_index().rename(columns={'index':' '}),
+    df1.iloc[[0]].reset_index().rename(columns={'index':' '}), # Zeigen Sie nur die B-Reihe an
     gridOptions=grid_options1,
     height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    allow_unsafe_js_code=True,
 )
 
 response2 = AgGrid(
-    df2.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options2,
+    df2.iloc[[0]].reset_index().rename(columns={'index':' '}), # Zeigen Sie nur die B-Reihe an
+    gridOptions=grid_options1,
     height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    allow_unsafe_js_code=True,
 )
 
 response3 = AgGrid(
-    df3.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options3,
+    df3.iloc[[0]].reset_index().rename(columns={'index':' '}), # Zeigen Sie nur die B-Reihe an
+    gridOptions=grid_options1,
     height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    allow_unsafe_js_code=True,
 )
 
 response4 = AgGrid(
-    df4.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options4,
+    df4.iloc[[0]].reset_index().rename(columns={'index':' '}), # Zeigen Sie nur die B-Reihe an
+    gridOptions=grid_options1,
     height=150,
     width='50%',
     data_return_mode='as_input',
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
+    allow_unsafe_js_code=True,
 )
 
-# If the grid's data has been updated...
+# Wenn "Befund aktualisieren" geklickt wurde...
 if st.button('Befund aktualisieren'):
+    # Überprüfen Sie, ob in den B-Zeilen aller Tabellen eine Auswahl getroffen wurde
+    if all(response['data'] is not None and not response['data'].eq('').all(axis=None) for response in [response1, response2, response3, response4]):
+        # Erstellen und anzeigen Sie die aktualisierten Tabellen mit allen Zeilen
+        response1 = AgGrid(
+            df1.reset_index().rename(columns={'index':' '}), # Zeigen Sie jetzt alle Zeilen an
+            gridOptions=grid_options1,
+            height=150,
+            width='50%',
+            data_return_mode='as_input',
+            update_mode='value_changed',
+            fit_columns_on_grid_load=True,
+            allow_unsafe_js_code=True,
+        )
+
+        response2 = AgGrid(
+            df2.reset_index().rename(columns={'index':' '}), # Zeigen Sie jetzt alle Zeilen an
+            gridOptions=grid_options2,
+            height=150,
+            width='50%',
+            data_return_mode='as_input',
+            update_mode='value_changed',
+            fit_columns_on_grid_load=True,
+            allow_unsafe_js_code=True,
+        )
+
+        response3 = AgGrid(
+            df3.reset_index().rename(columns={'index':' '}), # Zeigen Sie jetzt alle Zeilen an
+            gridOptions=grid_options3,
+            height=150,
+            width='50%',
+            data_return_mode='as_input',
+            update_mode='value_changed',
+            fit_columns_on_grid_load=True,
+            allow_unsafe_js_code=True,
+        )
+
+        response4 = AgGrid(
+            df4.reset_index().rename(columns={'index':' '}), # Zeigen Sie jetzt alle Zeilen an
+            gridOptions=grid_options4,
+            height=150,
+            width='50%',
+            data_return_mode='as_input',
+            update_mode='value_changed',
+            fit_columns_on_grid_load=True,
+            allow_unsafe_js_code=True,
+        )
+
+
     if response1['data'] is not None:
         updated_df1 = response1['data'].set_index(' ')
         # Check if there is any input in 'B' row
