@@ -28,22 +28,12 @@ if 'df4' not in st.session_state:
 
 # Create grid options for each table
 gb1 = GridOptionsBuilder.from_dataframe(st.session_state.df1)
-gb2 = GridOptionsBuilder.from_dataframe(st.session_state.df2)
-gb3 = GridOptionsBuilder.from_dataframe(st.session_state.df3)
-gb4 = GridOptionsBuilder.from_dataframe(st.session_state.df4)
-
-grid_builders = [gb1, gb2, gb3, gb4]
-teeth = [teeth1, teeth2, teeth3, teeth4]
-
-for gb, tooth_group in zip(grid_builders, teeth):
-    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-    for tooth in tooth_group:
-        gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-
+gb1.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+for tooth in teeth1:
+    gb1.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options1 = gb1.build()
-grid_options2 = gb2.build()
-grid_options3 = gb3.build()
-grid_options4 = gb4.build()
+
+# Repeat the same for other tables...
 
 # Display the AgGrid
 st.header("Tabelle 1")
@@ -59,7 +49,7 @@ response = AgGrid(
     key='grid1'
 )
 
-# Repeat the same for other tables with their corresponding grid options...
+# Repeat the same for other tables...
 
 # Check if the button is pressed
 if st.button('Befund aktualisieren'):
