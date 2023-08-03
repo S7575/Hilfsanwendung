@@ -29,12 +29,30 @@ if 'df4' not in st.session_state:
 # Create grid options for each table
 gb = GridOptionsBuilder.from_dataframe(st.session_state.df1)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-gb.configure_column("values", cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+
+# Configure dropdown for each column
+for tooth in teeth1:
+    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+
+# Configure dropdown for each column
+for tooth in teeth2:
+    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+
+# Configure dropdown for each column
+for tooth in teeth3:
+    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+
+# Configure dropdown for each column
+for tooth in teeth4:
+    gb.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
+
+
+
 grid_options = gb.build()
 
 # Display the AgGrid
 st.header("Tabelle 1")
-response1 = AgGrid(
+response = AgGrid(
     st.session_state.df1,
     gridOptions=grid_options,
     height=200, 
@@ -60,7 +78,6 @@ response2 = AgGrid(
     key='grid2'
 )
 
-
 # Display the AgGrid
 st.header("Tabelle 3")
 response3 = AgGrid(
@@ -74,7 +91,6 @@ response3 = AgGrid(
     allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
     key='grid3'
 )
-
 
 # Display the AgGrid
 st.header("Tabelle 4")
@@ -90,13 +106,10 @@ response4 = AgGrid(
     key='grid4'
 )
 
-
-# Do the same for the other tables...
-
 # Check if the button is pressed
 if st.button('Befund aktualisieren'):
     # If the button is pressed, update the dataframe
-    st.session_state.df1 = response1['data']
+    st.session_state.df1 = response['data']
     st.session_state.df2 = response2['data']
     st.session_state.df3 = response3['data']
     st.session_state.df4 = response4['data']
