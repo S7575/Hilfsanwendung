@@ -3,7 +3,7 @@ from st_aggrid import AgGrid
 import pandas as pd
 
 # Define teeth and dropdown options
-teeth1 = [12,12,13,14,15,16,17,18]
+teeth1 = [11,12,13,14,15,16,17,18]
 teeth2 = [21,22,23,24,25,26,27,28]
 options = ['ww', 'x']
 
