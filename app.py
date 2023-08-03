@@ -126,18 +126,11 @@ def update_values(df, teeth_set):
     return df
 
 # Check if the button is pressed
-if st.button('Befund aktualisieren'):
+if st.button('Befund aktualisieren', key='button1'):
     # If the button is pressed, update the dataframe
     for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
         st.session_state[df_name] = update_values(st.session_state[df_name], tooth_set)
-        
-# Listen for changes in the dataframe
-if st.button('Befund aktualisieren'):
-    # If the button is pressed, update the dataframe
-    st.session_state.df1 = update_values(response['data'])
-    st.session_state.df2 = update_values(response2['data'])
-    st.session_state.df3 = update_values(response3['data'])
-    st.session_state.df4 = update_values(response4['data'])
+
     # Add new rows 'B' and 'TP'
     for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
         TP_series = pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in tooth_set}}, name='TP')
@@ -159,4 +152,3 @@ if st.button('Befund aktualisieren'):
 
     st.header("Aktualisierte Tabelle 4")
     AgGrid(st.session_state.df4)
-
