@@ -20,6 +20,21 @@ df2 = df2.fillna('')
 df3 = df3.fillna('')
 df4 = df4.fillna('')
 
+# Festlegung von Werten für R und TP, die in den neuen tabellen abgerufen werden
+
+df1.loc['R'] = ''
+df1.loc['TP'] = ''
+
+df2.loc['R'] = ''
+df2.loc['TP'] = ''
+
+df3.loc['R'] = ''
+df3.loc['TP'] = ''
+
+df4.loc['R'] = ''
+df4.loc['TP'] = ''
+
+
 # Create grid options for each table
 grid_options1 = {
     'defaultColDef': {
@@ -97,8 +112,9 @@ grid_options4['columnDefs'] = [
 
 
 
+
 # Create AgGrid
-response1 = AgGrid(
+response1 = st.write(AgGrid(
     df1.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options1,
     height=150,
@@ -107,9 +123,9 @@ response1 = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
-)
+))
 
-response2 = AgGrid(
+response2 = st.write(AgGrid(
     df2.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options2,
     height=150,
@@ -118,9 +134,9 @@ response2 = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
-)
+))
 
-response3 = AgGrid(
+response3 = st.write(AgGrid(
     df3.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options3,
     height=150,
@@ -129,9 +145,9 @@ response3 = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
-)
+))
 
-response4 = AgGrid(
+response4 = st.write(AgGrid(
     df4.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options4,
     height=150,
@@ -140,7 +156,7 @@ response4 = AgGrid(
     update_mode='value_changed',
     fit_columns_on_grid_load=True,
     allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
-)
+))
 
 # If the grid's data has been updated...
 if st.button('Befund aktualisieren'):
@@ -157,11 +173,12 @@ if st.button('Befund aktualisieren'):
                     updated_df1.loc['TP', str(tooth)] = 'E'
 
             # Display final table with AgGrid
-            AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), 
-                   editable=False, 
-                   fit_columns_on_grid_load=True, 
-                   height=150, 
-                   key='AgGrid1')
+                st.write(AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), 
+                editable=False, 
+                fit_columns_on_grid_load=True, 
+                height=150, 
+                key='AgGrid1'))
+
 
     if response2['data'] is not None:
         updated_df2 = response2['data'].set_index(' ')
@@ -176,11 +193,11 @@ if st.button('Befund aktualisieren'):
                     updated_df2.loc['TP', str(tooth)] = 'E'
 
             # Display final table with AgGrid
-            AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), 
+            st.write(AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), 
                    editable=False, 
                    fit_columns_on_grid_load=True, 
                    height=150, 
-                   key='AgGrid2')
+                   key='AgGrid2'))
             
     if response3['data'] is not None:
         updated_df3 = response3['data'].set_index(' ')
@@ -194,11 +211,11 @@ if st.button('Befund aktualisieren'):
                     updated_df3.loc['TP', str(tooth)] = 'E'
 
             # Display final table with AgGrid
-            AgGrid(updated_df3.reset_index().rename(columns={'index':' '}), 
+            st.write(AgGrid(updated_df3.reset_index().rename(columns={'index':' '}), 
                    editable=False, 
                    fit_columns_on_grid_load=True, 
                    height=150, 
-                   key='AgGrid3')
+                   key='AgGrid3'))
             
 
     if response4['data'] is not None:
@@ -213,9 +230,9 @@ if st.button('Befund aktualisieren'):
                     updated_df4.loc['TP', str(tooth)] = 'E'
 
             # Display final table with AgGrid
-            AgGrid(updated_df4.reset_index().rename(columns={'index':' '}), 
+            st.write(AgGrid(updated_df4.reset_index().rename(columns={'index':' '}),
                    editable=False, 
                    fit_columns_on_grid_load=True, 
                    height=150, 
-                   key='AgGrid4')
+                   key='AgGrid4'))
 
