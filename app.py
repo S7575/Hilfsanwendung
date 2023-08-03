@@ -57,7 +57,7 @@ st.header("Tabelle 1")
 response = AgGrid(
     st.session_state.df1,
     gridOptions=grid_options1,
-    height=200, 
+    height=100, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -71,7 +71,7 @@ st.header("Tabelle 2")
 response2 = AgGrid(
     st.session_state.df2,
     gridOptions=grid_options2,
-    height=200, 
+    height=100, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -84,7 +84,7 @@ st.header("Tabelle 3")
 response3 = AgGrid(
     st.session_state.df3,
     gridOptions=grid_options3,
-    height=200, 
+    height=100, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
@@ -97,7 +97,7 @@ st.header("Tabelle 4")
 response4 = AgGrid(
     st.session_state.df4,
     gridOptions=grid_options4,
-    height=200, 
+    height=100, 
     width='100%',
     data_return_mode='as_input', 
     update_mode=GridUpdateMode.VALUE_CHANGED,
