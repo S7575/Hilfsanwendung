@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
-import streamlit.session_state as SessionState
 
 # Define teeth and dropdown options
 teeth1 = [11,12,13,14,15,16,17,18]
@@ -17,19 +16,26 @@ df2 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth2]).fillna
 df3 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth3]).fillna('')
 df4 = pd.DataFrame(index=['B'], columns=[str(tooth) for tooth in teeth4]).fillna('')
 
-# Get Session State
-session_state = SessionState.get(df1=df1, df2=df2, df3=df3, df4=df4)
+# Check if session state already has the dataframes, if not assign them
+if 'df1' not in st.session_state:
+    st.session_state['df1'] = df1
+if 'df2' not in st.session_state:
+    st.session_state['df2'] = df2
+if 'df3' not in st.session_state:
+    st.session_state['df3'] = df3
+if 'df4' not in st.session_state:
+    st.session_state['df4'] = df4
 
 # Create grid options for each table
-gb = GridOptionsBuilder.from_dataframe(session_state.df1)
+gb = GridOptionsBuilder.from_dataframe(st.session_state.df1)
 gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
 gb.configure_column("values", cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
 grid_options = gb.build()
 
 # Display the AgGrid
 st.header("Tabelle 1")
-response = AgGrid(
-    session_state.df1,
+response1 = AgGrid(
+    st.session_state.df1,
     gridOptions=grid_options,
     height=200, 
     width='100%',
@@ -40,9 +46,10 @@ response = AgGrid(
     key='grid1'
 )
 
+# Display the AgGrid
 st.header("Tabelle 2")
 response2 = AgGrid(
-    session_state.df2,
+    st.session_state.df1,
     gridOptions=grid_options,
     height=200, 
     width='100%',
@@ -53,9 +60,11 @@ response2 = AgGrid(
     key='grid2'
 )
 
+
+# Display the AgGrid
 st.header("Tabelle 3")
 response3 = AgGrid(
-    session_state.df3,
+    st.session_state.df1,
     gridOptions=grid_options,
     height=200, 
     width='100%',
@@ -66,9 +75,11 @@ response3 = AgGrid(
     key='grid3'
 )
 
+
+# Display the AgGrid
 st.header("Tabelle 4")
 response4 = AgGrid(
-    session_state.df4,
+    st.session_state.df1,
     gridOptions=grid_options,
     height=200, 
     width='100%',
@@ -79,28 +90,31 @@ response4 = AgGrid(
     key='grid4'
 )
 
+
+# Do the same for the other tables...
+
 # Check if the button is pressed
 if st.button('Befund aktualisieren'):
     # If the button is pressed, update the dataframe
-    session_state.df1 = response['data']
-    session_state.df2 = response2['data']
-    session_state.df3 = response3['data']
-    session_state.df4 = response4['data']
+    st.session_state.df1 = response1['data']
+    st.session_state.df2 = response2['data']
+    st.session_state.df3 = response3['data']
+    st.session_state.df4 = response4['data']
     
     # Add new rows 'B' and 'TP'
-    for df in [session_state.df1, session_state.df2, session_state.df3, session_state.df4]:
+    for df in [st.session_state.df1, st.session_state.df2, st.session_state.df3, st.session_state.df4]:
         df.loc['TP'] = ""
         df.loc['B'] = ""
         
     # Display the updated tables
     st.header("Aktualisierte Tabelle 1")
-    AgGrid(session_state.df1)
+    AgGrid(st.session_state.df1)
 
     st.header("Aktualisierte Tabelle 2")
-    AgGrid(session_state.df2)
+    AgGrid(st.session_state.df2)
 
     st.header("Aktualisierte Tabelle 3")
-    AgGrid(session_state.df3)
+    AgGrid(st.session_state.df3)
 
     st.header("Aktualisierte Tabelle 4")
-    AgGrid(session_state.df4)
+    AgGrid(st.session_state.df4)
