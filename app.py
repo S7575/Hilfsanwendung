@@ -120,7 +120,7 @@ response2 = AgGrid(
 
 response3 = AgGrid(
     df3.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
+    gridOptions=grid_options3,
     height=150,
     width='50%',
     data_return_mode='as_input',
@@ -131,7 +131,7 @@ response3 = AgGrid(
 
 response4 = AgGrid(
     df4.reset_index().rename(columns={'index':' '}),
-    gridOptions=grid_options,
+    gridOptions=grid_options4,
     height=150,
     width='50%',
     data_return_mode='as_input',
