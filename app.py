@@ -17,6 +17,8 @@ df3 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teet
 df4 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth4])
 df1 = df1.fillna('')
 df2 = df2.fillna('')
+df3 = df1.fillna('')
+df4 = df2.fillna('')
 
 # Create grid options for each table
 grid_options1 = {
