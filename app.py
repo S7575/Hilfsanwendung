@@ -106,6 +106,16 @@ if st.button('Befund aktualisieren'):
                     updated_df2.loc['R', str(tooth)] = 'E'
                     updated_df2.loc['TP', str(tooth)] = 'E'
 
-        # Display final table with AgGrid
-        AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
-        AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), editable=False, fit_columns_on_grid_load=True, height=150)
+        # For the first table
+AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), 
+       editable=False, 
+       fit_columns_on_grid_load=True, 
+       height=150, 
+       key='AgGrid1')
+
+# For the second table
+AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), 
+       editable=False, 
+       fit_columns_on_grid_load=True, 
+       height=150, 
+       key='AgGrid2')
