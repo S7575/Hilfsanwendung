@@ -58,10 +58,16 @@ if st.button('Befund aktualisieren'):
             data = st.session_state.datasets[i]
             for index, row in data.iterrows():
                 if row['B'] == 'ww':
-                    if 15 <= row['Zähne'] <= 25 or 34 <= row['Zähne'] <= 44:
-                        data.loc[index, 'R'] = 'KV'
-                    elif 16 <= row['Zähne'] <= 18 or 26 <= row['Zähne'] <= 28 or 35 <= row['Zähne'] <= 38 or 45 <= row['Zähne'] <= 48:
-                        data.loc[index, 'R'] = 'K'
+                    if (row['Zähne'] in range(11, 19)) or (row['Zähne'] in range(21, 29)):
+                        if row['Zähne'] in [15, 16, 25, 26]:
+                            data.loc[index, 'R'] = 'K'
+                        else:
+                            data.loc[index, 'R'] = 'KV'
+                    elif (row['Zähne'] in range(31, 39)) or (row['Zähne'] in range(41, 49)):
+                        if row['Zähne'] in [35, 36, 45, 46]:
+                            data.loc[index, 'R'] = 'K'
+                        else:
+                            data.loc[index, 'R'] = 'KV'
                 elif row['B'] == 'x':
                     data.loc[index, 'R'] = 'E'
             st.session_state.datasets[i] = data  # Speichern der aktualisierten Daten
