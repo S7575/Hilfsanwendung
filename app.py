@@ -1,5 +1,5 @@
 import streamlit as st
-from st_aggrid import AgGrid
+from st_aggrid import AgGrid, GridOptionsBuilder
 import pandas as pd
 
 # Definieren der Tabellen
@@ -8,18 +8,56 @@ data_2 = pd.DataFrame({'Zähne': [21,22,23,24,25,26,27,28], 'B': ['']*8, 'R': ['
 data_3 = pd.DataFrame({'Zähne': [31,32,33,34,35,36,37,38], 'B': ['']*8, 'R': ['']*8, 'TP': ['']*8})
 data_4 = pd.DataFrame({'Zähne': [41,42,43,44,45,46,47,48], 'B': ['']*8, 'R': ['']*8, 'TP': ['']*8})
 
+datasets = [data_1, data_2, data_3, data_4]
+
+# Dropdown Optionen
+b_options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
+tp_options = ["A", "ABV", "ABM", "B", "BM", "BV", "E", "EO", "H", "K", "KH", "KM", "KMH"]
+
 # Erzeugen der Check-Kästchen
-checkbox_1 = st.checkbox('1. Quadrat einblenden')
-checkbox_2 = st.checkbox('2. Quadrat einblenden')
-checkbox_3 = st.checkbox('3. Quadrat einblenden')
-checkbox_4 = st.checkbox('4. Quadrat einblenden')
+checkboxes = [
+    st.checkbox('1. Quadrat einblenden'),
+    st.checkbox('2. Quadrat einblenden'),
+    st.checkbox('3. Quadrat einblenden'),
+    st.checkbox('4. Quadrat einblenden'),
+]
+
+def build_grid(data, options, tp_options):
+    # Konfigurieren der Spalten
+    gb = GridOptionsBuilder.from_dataframe(data)
+    gb.configure_column("B", cellEditor="agSelectCellEditor", cellEditorParams={"values": options}, editable=True)
+    gb.configure_column("TP", cellEditor="agSelectCellEditor", cellEditorParams={"values": tp_options}, editable=True)
+    gb.configure_grid_options(domLayout='autoHeight')
+    gridOptions = gb.build()
+
+    # Ag-Grid anzeigen
+    grid_response = AgGrid(
+        data,
+        gridOptions=gridOptions,
+        height=200,
+        width='100%',
+        data_return_mode='as_input',  # Updates werden beim Editieren automatisch in den Dataframe übernommen
+        update_mode='CELL_CHANGED',   # Updates werden bei jeder Zellenänderung zurückgegeben
+        fit_columns_on_grid_load=True,
+        allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
+    )
+    
+    # Aktualisieren der R-Spalte, wenn die B-Spalte geändert wird
+    for change in grid_response['data_changed']:
+        if 'B' in change:
+            value = change['B']
+            index = change['index']
+            if value == 'ww':
+                if 15 <= data.loc[index, 'Zähne'] <= 25 or 34 <= data.loc[index, 'Zähne'] <= 44:
+                    data.loc[index, 'R'] = 'KV'
+                elif 16 <= data.loc[index, 'Zähne'] <= 18 or 26 <= data.loc[index, 'Zähne'] <= 28 or 35 <= data.loc[index, 'Zähne'] <= 38 or 45 <= data.loc[index, 'Zähne'] <= 48:
+                    data.loc[index, 'R'] = 'K'
+            elif value == 'x':
+                data.loc[index, 'R'] = 'E'
+                
+    return data
 
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
-if checkbox_1:
-    AgGrid(data_1)
-if checkbox_2:
-    AgGrid(data_2)
-if checkbox_3:
-    AgGrid(data_3)
-if checkbox_4:
-    AgGrid(data_4)
+for checkbox, data in zip(checkboxes, datasets):
+    if checkbox:
+        data = build_grid(data, b_options, tp_options)
