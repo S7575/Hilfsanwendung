@@ -64,4 +64,5 @@ if st.button('Befund aktualisieren'):
                         data.loc[index, 'R'] = 'K'
                 elif row['B'] == 'x':
                     data.loc[index, 'R'] = 'E'
-            AgGrid(data)  # Tabelle neu anzeigen
+            st.session_state.datasets[i] = data  # Speichern der aktualisierten Daten
+            AgGrid(st.session_state.datasets[i])  # Tabelle neu anzeigen
