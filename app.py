@@ -14,13 +14,25 @@ datasets = [data_1, data_2, data_3, data_4]
 b_options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 tp_options = ["A", "ABV", "ABM", "B", "BM", "BV", "E", "EO", "H", "K", "KH", "KM", "KMH"]
 
+
+# Initialisieren der Check-Kästchen im Session State, falls sie noch nicht existieren
+checkboxes = ["checkbox1", "checkbox2", "checkbox3", "checkbox4"]
+for checkbox in checkboxes:
+    if checkbox not in st.session_state:
+        st.session_state[checkbox] = False
+
 # Erzeugen der Check-Kästchen
-checkboxes = [
-    st.checkbox('1. Quadrat einblenden'),
-    st.checkbox('2. Quadrat einblenden'),
-    st.checkbox('3. Quadrat einblenden'),
-    st.checkbox('4. Quadrat einblenden'),
-]
+st.checkbox('1. Quadrat einblenden', key="checkbox1")
+st.checkbox('2. Quadrat einblenden', key="checkbox2")
+st.checkbox('3. Quadrat einblenden', key="checkbox3")
+st.checkbox('4. Quadrat einblenden', key="checkbox4")
+
+# Wenn der Session State noch nicht initialisiert wurde
+if "datasets" not in st.session_state:
+    st.session_state["datasets"] = datasets
+
+
+
 
 def build_grid(data, options, tp_options):
     # Konfigurieren der Spalten
