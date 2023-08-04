@@ -22,7 +22,7 @@ checkboxes = [
     st.checkbox('-4. Quadrat einblenden'),
 ]
 
-def build_grid(data, options, tp_options):
+def build_grid(data, options, tp_options, key):
     # Konfigurieren der Spalten
     gb = GridOptionsBuilder.from_dataframe(data)
     gb.configure_column("B", cellEditor="agSelectCellEditor", cellEditorParams={"values": options}, editable=True)
@@ -40,24 +40,22 @@ def build_grid(data, options, tp_options):
         update_mode='value_changed',
         fit_columns_on_grid_load=True,
         allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
+        key=f"grid_{key}"
     )
     
     return grid_response['data']
 
-# Wenn der Session State noch nicht initialisiert wurde
-if "datasets" not in st.session_state:
-    st.session_state["datasets"] = datasets
-
 # Erstellen der Grids
-grid_data = [build_grid(data, b_options, tp_options) for checkbox, data in zip(checkboxes, st.session_state["datasets"]) if checkbox]
+grid_data = [build_grid(data, b_options, tp_options, i) for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])) if checkbox]
 
 # Button hinzufügen, um Änderungen zu speichern
 if st.button("Änderungen speichern"):
     st.session_state["datasets"] = grid_data
 
 # Anzeigen der aktualisierten Grids
-for data in st.session_state["datasets"]:
-    AgGrid(data)
+for i, data in enumerate(st.session_state["datasets"]):
+    AgGrid(data, key=f"grid_{i}")
+
 
 
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
