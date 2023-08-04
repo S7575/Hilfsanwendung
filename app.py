@@ -16,10 +16,10 @@ tp_options = ["A", "ABV", "ABM", "B", "BM", "BV", "E", "EO", "H", "K", "KH", "KM
 
 # Erzeugen der Check-Kästchen
 checkboxes = [
-    st.checkbox('1. Quadrat einblenden'),
-    st.checkbox('2. Quadrat einblenden'),
-    st.checkbox('3. Quadrat einblenden'),
-    st.checkbox('4. Quadrat einblenden'),
+    st.checkbox('-1. Quadrat einblenden'),
+    st.checkbox('-2. Quadrat einblenden'),
+    st.checkbox('-3. Quadrat einblenden'),
+    st.checkbox('-4. Quadrat einblenden'),
 ]
 
 def build_grid(data, options, tp_options):
