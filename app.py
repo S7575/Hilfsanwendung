@@ -40,21 +40,20 @@ def build_grid(data, options, tp_options, key):
         update_mode='value_changed',
         fit_columns_on_grid_load=True,
         allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
-        key=f"grid_{key}"
+        key=key
     )
     
     return grid_response['data']
 
-# Erstellen der Grids
-grid_data = [build_grid(data, b_options, tp_options, i) for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])) if checkbox]
-
-# Button hinzufügen, um Änderungen zu speichern
+# Erstellen der Grids und Speichern der Änderungen
 if st.button("Änderungen speichern"):
-    st.session_state["datasets"] = grid_data
+    st.session_state["datasets"] = [build_grid(data, b_options, tp_options, key=f"grid_{i}") for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])) if checkbox]
 
 # Anzeigen der aktualisierten Grids
-for i, data in enumerate(st.session_state["datasets"]):
-    AgGrid(data, key=f"grid_{i}")
+for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])):
+    if checkbox:
+        AgGrid(data, key=f"grid_view_{i}")
+
 
 
 
