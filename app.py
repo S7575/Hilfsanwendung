@@ -43,14 +43,19 @@ def build_grid(data, options, tp_options):
     
     return grid_response['data']
 
+# Wenn der Session State noch nicht initialisiert wurde
+if "datasets" not in st.session_state:
+    st.session_state["datasets"] = datasets
+
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
-for checkbox, data in zip(checkboxes, datasets):
-    if checkbox:
-        data = build_grid(data, b_options, tp_options)
+for i in range(4):
+    if checkboxes[i]:
+        st.session_state.datasets[i] = build_grid(st.session_state.datasets[i], b_options, tp_options)
 
 if st.button('Befund aktualisieren'):
-    for i, data in enumerate(datasets):
+    for i in range(4):
         if checkboxes[i]:
+            data = st.session_state.datasets[i]
             for index, row in data.iterrows():
                 if row['B'] == 'ww':
                     if 15 <= row['Zähne'] <= 25 or 34 <= row['Zähne'] <= 44:
