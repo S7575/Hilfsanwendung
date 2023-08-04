@@ -1,6 +1,6 @@
-import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
+from st_aggrid import AgGrid
+import pandas as pd
 
 # Define teeth and dropdown options
 teeth1 = [11,12,13,14,15,16,17,18]
@@ -10,151 +10,212 @@ teeth4 = [41,42,43,44,45,46,47,48]
 
 options = ['ww', 'x', 'a', 'ab', 'abw', 'aw', 'b', 'bw', 'e', 'ew', 'f', 'ix', 'k', 'kw', 'pkw', 'pw', 'r', 'rW', 'sb', 'sbw', 'se', 'sew', 'sk', 'skw', 'so', 'sow', 'st', 'stw', 't', 't2w', 'tw', 'ur', ')(']
 
-# Initialize DataFrames and add a row label column
-df1 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth1}})
-df2 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth2}})
-df3 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth3}})
-df4 = pd.DataFrame({"B": ['B'], **{str(tooth): [''] for tooth in teeth4}})
-
-# Check if session state already has the dataframes, if not assign them
-if 'df1' not in st.session_state:
-    st.session_state['df1'] = df1
-if 'df2' not in st.session_state:
-    st.session_state['df2'] = df2
-if 'df3' not in st.session_state:
-    st.session_state['df3'] = df3
-if 'df4' not in st.session_state:
-    st.session_state['df4'] = df4
+# Initialize DataFrame
+df1 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth1])
+df2 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth2])
+df3 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth3])
+df4 = pd.DataFrame(index=['B', 'R', 'TP'], columns=[str(tooth) for tooth in teeth4])
+df1 = df1.fillna('')
+df2 = df2.fillna('')
+df3 = df3.fillna('')
+df4 = df4.fillna('')
 
 # Create grid options for each table
-gb1 = GridOptionsBuilder.from_dataframe(st.session_state.df1)
-gb1.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in ["B"] + teeth1:
-    gb1.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-grid_options1 = gb1.build()
+grid_options1 = {
+    'defaultColDef': {
+        'editable': True,
+        'resizable': True,
+        'headerComponentParams': {'menuTabs': ['generalTab']},
+    },
+    'columnDefs': [
+        {
+            'headerName': ' ',
+            'field': ' ',
+            'width': 100,
+        }
+    ] + [
+        {
+            'field': str(tooth),
+            'cellEditor': 'agSelectCellEditor',
+            'cellEditorParams': {
+                'values': options
+            }
+        } for tooth in teeth1
+    ]
+}
 
-# Repeat the same for other tables...
-gb2 = GridOptionsBuilder.from_dataframe(st.session_state.df2)
-gb2.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in ["B"] + teeth2:
-    gb2.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-grid_options2 = gb2.build()
+grid_options2 = grid_options1.copy()
+grid_options2['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth2
+]
 
-gb3 = GridOptionsBuilder.from_dataframe(st.session_state.df3)
-gb3.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in ["B"] + teeth3:
-    gb3.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-grid_options3 = gb3.build()
+grid_options3 = grid_options1.copy()
+grid_options3['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth3
+]
 
-gb4 = GridOptionsBuilder.from_dataframe(st.session_state.df4)
-gb4.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-for tooth in ["B"] + teeth4:
-    gb4.configure_column(str(tooth), cellEditor='agSelectCellEditor', cellEditorParams={'values': options}, type=["editableColumn"])
-grid_options4 = gb4.build()
+grid_options4 = grid_options1.copy()
+grid_options4['columnDefs'] = [
+    {
+        'headerName': ' ',
+        'field': ' ',
+        'width': 100,
+    }
+] + [
+    {
+        'field': str(tooth),
+        'cellEditor': 'agSelectCellEditor',
+        'cellEditorParams': {
+            'values': options
+        }
+    } for tooth in teeth4
+]
 
-# Display the AgGrid
-st.header("Tabelle 1")
-response = AgGrid(
-    st.session_state.df1,
+
+
+# Create AgGrid
+response1 = AgGrid(
+    df1.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options1,
-    height=100, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
+    height=150,
+    width='50%',
+    data_return_mode='as_input',
+    update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid1'
+    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
 )
 
-# Repeat the same for other tables...
-st.header("Tabelle 2")
 response2 = AgGrid(
-    st.session_state.df2,
+    df2.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options2,
-    height=100, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
+    height=150,
+    width='50%',
+    data_return_mode='as_input',
+    update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid2'
+    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
 )
 
-st.header("Tabelle 3")
 response3 = AgGrid(
-    st.session_state.df3,
+    df3.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options3,
-    height=100, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
+    height=150,
+    width='50%',
+    data_return_mode='as_input',
+    update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid3'
+    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
 )
 
-st.header("Tabelle 4")
 response4 = AgGrid(
-    st.session_state.df4,
+    df4.reset_index().rename(columns={'index':' '}),
     gridOptions=grid_options4,
-    height=100, 
-    width='100%',
-    data_return_mode='as_input', 
-    update_mode=GridUpdateMode.VALUE_CHANGED,
+    height=150,
+    width='50%',
+    data_return_mode='as_input',
+    update_mode='value_changed',
     fit_columns_on_grid_load=True,
-    allow_unsafe_jscode=True,  # Set it to True to allow jsfunction to be injected
-    key='grid4'
+    allow_unsafe_js_code=True,  # This is required to enable onCellValueChanged callback
 )
 
-# Function to add R and TP rows and update their values based on dropdown selection
-def update_values(df, teeth_set):
-    # Add 'R' and 'TP' rows if they don't exist
-    if 'R' not in df.index:
-        R_series = pd.Series({**{'B': 'R'}, **{str(tooth): '' for tooth in teeth_set}}, name='R')
-        df = pd.concat([df, R_series])
-    if 'TP' not in df.index:
-        TP_series = pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in teeth_set}}, name='TP')
-        df = pd.concat([df, TP_series])
+# If the grid's data has been updated...
+if st.button('Befund aktualisieren'):
+    if response1['data'] is not None:
+        updated_df1 = response1['data'].set_index(' ')
+        # Check if there is any input in 'B' row
+        if not updated_df1.loc['B'].eq('').all():  # if all are empty strings, we assume there's no input
+            for tooth in teeth1:
+                if updated_df1.loc['B', str(tooth)] == 'ww':
+                    updated_df1.loc['R', str(tooth)] = 'KV'
+                    updated_df1.loc['TP', str(tooth)] = 'KV'
+                elif updated_df1.loc['B', str(tooth)] == 'x':
+                    updated_df1.loc['R', str(tooth)] = 'E'
+                    updated_df1.loc['TP', str(tooth)] = 'E'
 
-    df.sort_index(inplace=True)  # Sort the index after adding new rows
+            # Display final table with AgGrid
+            AgGrid(updated_df1.reset_index().rename(columns={'index':' '}), 
+                   editable=False, 
+                   fit_columns_on_grid_load=True, 
+                   height=150, 
+                   key='AgGrid1')
 
-    # Update the values of 'R' and 'TP' based on 'B' row value
-    for col in df.columns:
-        if col != 'B':
-            B_value = df.loc['B', col]
-            print(f"B_value for column {col}: {B_value}")  # Debugging statement
-            if (B_value == 'ww').any():  # Use .any() to check if any elements in the Series are 'ww'
-                df.loc['R', col] = 'KV'
-                df.loc['TP', col] = 'KV'
-    return df
+    if response2['data'] is not None:
+        updated_df2 = response2['data'].set_index(' ')
+        # Check if there is any input in 'B' row
+        if not updated_df2.loc['B'].eq('').all():  # if all are empty strings, we assume there's no input
+            for tooth in teeth2:
+                if updated_df2.loc['B', str(tooth)] == 'ww':
+                    updated_df2.loc['R', str(tooth)] = 'KV'
+                    updated_df2.loc['TP', str(tooth)] = 'KV'
+                elif updated_df2.loc['B', str(tooth)] == 'x':
+                    updated_df2.loc['R', str(tooth)] = 'E'
+                    updated_df2.loc['TP', str(tooth)] = 'E'
 
+            # Display final table with AgGrid
+            AgGrid(updated_df2.reset_index().rename(columns={'index':' '}), 
+                   editable=False, 
+                   fit_columns_on_grid_load=True, 
+                   height=150, 
+                   key='AgGrid2')
+            
+    if response3['data'] is not None:
+        updated_df3 = response3['data'].set_index(' ')
+        if not updated_df3.loc['B'].eq('').all():
+            for tooth in teeth3:
+                if updated_df3.loc['B', str(tooth)] == 'ww':
+                    updated_df3.loc['R', str(tooth)] = 'KV'
+                    updated_df3.loc['TP', str(tooth)] = 'KV'
+                elif updated_df3.loc['B', str(tooth)] == 'x':
+                    updated_df3.loc['R', str(tooth)] = 'E'
+                    updated_df3.loc['TP', str(tooth)] = 'E'
 
+            # Display final table with AgGrid
+            AgGrid(updated_df3.reset_index().rename(columns={'index':' '}), 
+                   editable=False, 
+                   fit_columns_on_grid_load=True, 
+                   height=150, 
+                   key='AgGrid3')
+            
 
+    if response4['data'] is not None:
+        updated_df4 = response4['data'].set_index(' ')
+        if not updated_df4.loc['B'].eq('').all():
+            for tooth in teeth4:
+                if updated_df4.loc['B', str(tooth)] == 'ww':
+                    updated_df4.loc['R', str(tooth)] = 'KV'
+                    updated_df4.loc['TP', str(tooth)] = 'KV'
+                elif updated_df4.loc['B', str(tooth)] == 'x':
+                    updated_df4.loc['R', str(tooth)] = 'E'
+                    updated_df4.loc['TP', str(tooth)] = 'E'
 
-# Check if the button is pressed
-if st.button('Befund aktualisieren', key='button1'):
-    # If the button is pressed, update the dataframe
-    for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
-        st.session_state[df_name] = update_values(st.session_state[df_name], tooth_set)
+            # Display final table with AgGrid
+            AgGrid(updated_df4.reset_index().rename(columns={'index':' '}), 
+                   editable=False, 
+                   fit_columns_on_grid_load=True, 
+                   height=150, 
+                   key='AgGrid4')
 
-    # Add new rows 'B' and 'TP'
-    for tooth_set, df_name in zip([teeth1, teeth2, teeth3, teeth4], ['df1', 'df2', 'df3', 'df4']):
-        TP_series = pd.Series({**{'B': 'TP'}, **{str(tooth): '' for tooth in tooth_set}}, name='TP')
-        B_series = pd.Series({**{'B': 'B'}, **{str(tooth): '' for tooth in tooth_set}}, name='B')
-        st.session_state[df_name] = pd.concat([st.session_state[df_name], TP_series, B_series])
-        
-        # Ensure all column names are strings
-        st.session_state[df_name].columns = st.session_state[df_name].columns.astype(str)
-        
-    # Display the updated tables
-    st.header("Aktualisierte Tabelle 1")
-    AgGrid(st.session_state.df1)
-
-    st.header("Aktualisierte Tabelle 2")
-    AgGrid(st.session_state.df2)
-
-    st.header("Aktualisierte Tabelle 3")
-    AgGrid(st.session_state.df3)
-
-    st.header("Aktualisierte Tabelle 4")
-    AgGrid(st.session_state.df4)
