@@ -48,6 +48,18 @@ def build_grid(data, options, tp_options):
 if "datasets" not in st.session_state:
     st.session_state["datasets"] = datasets
 
+# Erstellen der Grids
+grid_data = [build_grid(data, b_options, tp_options) for checkbox, data in zip(checkboxes, st.session_state["datasets"]) if checkbox]
+
+# Button hinzufügen, um Änderungen zu speichern
+if st.button("Änderungen speichern"):
+    st.session_state["datasets"] = grid_data
+
+# Anzeigen der aktualisierten Grids
+for data in st.session_state["datasets"]:
+    AgGrid(data)
+
+
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
 for i in range(4):
     if checkboxes[i]:
