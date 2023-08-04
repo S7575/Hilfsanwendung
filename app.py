@@ -60,15 +60,15 @@ if st.button('Befund aktualisieren'):
                 if row['B'] == 'ww':
                     if (row['Zähne'] in range(11, 19)) or (row['Zähne'] in range(21, 29)):
                         if row['Zähne'] in [15, 16, 25, 26]:
-                            data.loc[index, 'R'] = 'K'
+                            data.at[index, 'R'] = 'K'
                         else:
-                            data.loc[index, 'R'] = 'KV'
+                            data.at[index, 'R'] = 'KV'
                     elif (row['Zähne'] in range(31, 39)) or (row['Zähne'] in range(41, 49)):
                         if row['Zähne'] in [35, 36, 45, 46]:
-                            data.loc[index, 'R'] = 'K'
+                            data.at[index, 'R'] = 'K'
                         else:
-                            data.loc[index, 'R'] = 'KV'
+                            data.at[index, 'R'] = 'KV'
                 elif row['B'] == 'x':
-                    data.loc[index, 'R'] = 'E'
+                    data.at[index, 'R'] = 'E'
             st.session_state["datasets"][i] = data  # Speichern der aktualisierten Daten
             AgGrid(st.session_state["datasets"][i])  # Tabelle neu anzeigen
