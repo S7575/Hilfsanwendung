@@ -30,7 +30,8 @@ def build_grid(data, options, tp_options):
     gridOptions = gb.build()
 
     # Definiere eine benutzerdefinierte JavaScript-Funktion, um Zelländerungen zu erfassen
-    custom_js_code = """
+    st.markdown("""
+    <script>
     function myCellValueChanged(event) {
         // Überprüfe, ob die Zelle bearbeitet wurde
         if (event.oldValue !== event.newValue) {
@@ -38,7 +39,9 @@ def build_grid(data, options, tp_options):
             window.Streamlit.setComponentValue(event.newValue);
         }
     }
-    """
+    </script>
+    """, unsafe_allow_html=True)
+
 
     grid_response = AgGrid(
         data,
