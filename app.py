@@ -63,7 +63,7 @@ if st.button('Befund aktualisieren'):
                             data.at[index, 'R'] = 'K'
                         else:
                             data.at[index, 'R'] = 'KV'
-                    elif (row['Zähne'] in range(31, 38)) or (row['Zähne'] in range(41, 48)):
+                    elif (row['Zähne'] in range(31, 39)) or (row['Zähne'] in range(41, 49)):
                         if row['Zähne'] in [35, 36, 37, 38, 45, 46, 47, 48]:
                             data.at[index, 'R'] = 'K'
                         else:
