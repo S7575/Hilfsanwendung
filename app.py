@@ -59,12 +59,12 @@ if st.button('Befund aktualisieren'):
             for index, row in data.iterrows():
                 if row['B'] == 'ww':
                     if (row['Zähne'] in range(11, 18)) or (row['Zähne'] in range(21, 28)):
-                        if row['Zähne'] in [15, 16, 17, 18, 25, 26, 27, 28]:
+                        if row['Zähne'] in [16, 17, 18, 26, 27, 28]:
                             data.at[index, 'R'] = 'K'
                         else:
                             data.at[index, 'R'] = 'KV'
                     elif (row['Zähne'] in range(31, 38)) or (row['Zähne'] in range(41, 48)):
-                        if row['Zähne'] in [34, 35, 36, 37, 38, 45, 46, 47, 48]:
+                        if row['Zähne'] in [35, 36, 37, 38, 45, 46, 47, 48]:
                             data.at[index, 'R'] = 'K'
                         else:
                             data.at[index, 'R'] = 'KV'
