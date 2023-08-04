@@ -23,14 +23,23 @@ checkboxes = [
 ]
 
 def build_grid(data, options, tp_options):
-    # Konfigurieren der Spalten
     gb = GridOptionsBuilder.from_dataframe(data)
     gb.configure_column("B", cellEditor="agSelectCellEditor", cellEditorParams={"values": options}, editable=True)
     gb.configure_column("TP", cellEditor="agSelectCellEditor", cellEditorParams={"values": tp_options}, editable=True)
-    gb.configure_grid_options(domLayout='autoHeight')
+    gb.configure_grid_options(domLayout='autoHeight', onCellValueChanged='myCellValueChanged')
     gridOptions = gb.build()
 
-    # Ag-Grid anzeigen
+    # Definiere eine benutzerdefinierte JavaScript-Funktion, um Zelländerungen zu erfassen
+    custom_js_code = """
+    function myCellValueChanged(event) {
+        // Überprüfe, ob die Zelle bearbeitet wurde
+        if (event.oldValue !== event.newValue) {
+            // Speichere den neuen Wert in Streamlit
+            window.Streamlit.setComponentValue(event.newValue);
+        }
+    }
+    """
+
     grid_response = AgGrid(
         data,
         gridOptions=gridOptions,
@@ -39,8 +48,9 @@ def build_grid(data, options, tp_options):
         data_return_mode='as_input',  # Updates werden beim Editieren automatisch in den Dataframe übernommen
         fit_columns_on_grid_load=True,
         allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
+        js_code=custom_js_code,  # Füge den benutzerdefinierten JS-Code hinzu
     )
-    
+
     return grid_response['data']
 
 # Wenn der Session State noch nicht initialisiert wurde
@@ -72,3 +82,9 @@ if st.button('Befund aktualisieren'):
                     data.at[index, 'R'] = 'E'
             st.session_state["datasets"][i] = data  # Speichern der aktualisierten Daten
             AgGrid(st.session_state["datasets"][i])  # Tabelle neu anzeigen
+
+for i in range(4):
+    if checkboxes[i]:
+        data = st.session_state.datasets[i]  # Zugriff auf die aktualisierten Daten
+        if 'KV' in data['R'].values:
+            st.text("Befund 1.1. und Befund 1.3.")
