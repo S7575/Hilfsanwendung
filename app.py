@@ -58,13 +58,13 @@ if st.button('Befund aktualisieren'):
             data = st.session_state.datasets[i].copy()  # copy of the dataframe
             for index, row in data.iterrows():
                 if row['B'] == 'ww':
-                    if (row['Zähne'] in range(11, 19)) or (row['Zähne'] in range(21, 29)):
-                        if row['Zähne'] in [15, 16, 25, 26]:
+                    if (row['Zähne'] in range(11, 18)) or (row['Zähne'] in range(21, 28)):
+                        if row['Zähne'] in [15, 16, 17, 18, 25, 26, 27, 28]:
                             data.at[index, 'R'] = 'K'
                         else:
                             data.at[index, 'R'] = 'KV'
-                    elif (row['Zähne'] in range(31, 39)) or (row['Zähne'] in range(41, 49)):
-                        if row['Zähne'] in [35, 36, 45, 46]:
+                    elif (row['Zähne'] in range(31, 38)) or (row['Zähne'] in range(41, 48)):
+                        if row['Zähne'] in [34, 35, 36, 37, 38, 45, 46, 47, 48]:
                             data.at[index, 'R'] = 'K'
                         else:
                             data.at[index, 'R'] = 'KV'
