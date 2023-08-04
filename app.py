@@ -41,20 +41,22 @@ def build_grid(data, options, tp_options):
         allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
     )
     
-    # Aktualisieren der R-Spalte, wenn die B-Spalte geändert wird
-    for index, row in grid_response['data'].iterrows():
-        if row['B'] == 'ww':
-            if 15 <= row['Zähne'] <= 25 or 34 <= row['Zähne'] <= 44:
-                grid_response['data'].loc[index, 'R'] = 'KV'
-            elif 16 <= row['Zähne'] <= 18 or 26 <= row['Zähne'] <= 28 or 35 <= row['Zähne'] <= 38 or 45 <= row['Zähne'] <= 48:
-                grid_response['data'].loc[index, 'R'] = 'K'
-        elif row['B'] == 'x':
-            grid_response['data'].loc[index, 'R'] = 'E'
-                
     return grid_response['data']
 
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
 for checkbox, data in zip(checkboxes, datasets):
     if checkbox:
         data = build_grid(data, b_options, tp_options)
-        AgGrid(data)  # Tabelle neu anzeigen
+
+if st.button('Befund aktualisieren'):
+    for i, data in enumerate(datasets):
+        if checkboxes[i]:
+            for index, row in data.iterrows():
+                if row['B'] == 'ww':
+                    if 15 <= row['Zähne'] <= 25 or 34 <= row['Zähne'] <= 44:
+                        data.loc[index, 'R'] = 'KV'
+                    elif 16 <= row['Zähne'] <= 18 or 26 <= row['Zähne'] <= 28 or 35 <= row['Zähne'] <= 38 or 45 <= row['Zähne'] <= 48:
+                        data.loc[index, 'R'] = 'K'
+                elif row['B'] == 'x':
+                    data.loc[index, 'R'] = 'E'
+            AgGrid(data)  # Tabelle neu anzeigen
