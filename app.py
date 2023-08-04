@@ -55,7 +55,7 @@ for i in range(4):
 if st.button('Befund aktualisieren'):
     for i in range(4):
         if checkboxes[i]:
-            data = st.session_state.datasets[i]
+            data = st.session_state.datasets[i].copy()  # copy of the dataframe
             for index, row in data.iterrows():
                 if row['B'] == 'ww':
                     if (row['Zähne'] in range(11, 19)) or (row['Zähne'] in range(21, 29)):
@@ -70,5 +70,5 @@ if st.button('Befund aktualisieren'):
                             data.loc[index, 'R'] = 'KV'
                 elif row['B'] == 'x':
                     data.loc[index, 'R'] = 'E'
-            st.session_state.datasets[i] = data  # Speichern der aktualisierten Daten
-            AgGrid(st.session_state.datasets[i])  # Tabelle neu anzeigen
+            st.session_state["datasets"][i] = data  # Speichern der aktualisierten Daten
+            AgGrid(st.session_state["datasets"][i])  # Tabelle neu anzeigen
