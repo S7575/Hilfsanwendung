@@ -37,27 +37,24 @@ def build_grid(data, options, tp_options):
         height=200,
         width='100%',
         data_return_mode='as_input',  # Updates werden beim Editieren automatisch in den Dataframe übernommen
-        update_mode='CELL_CHANGED',   # Updates werden bei jeder Zellenänderung zurückgegeben
         fit_columns_on_grid_load=True,
         allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
     )
     
     # Aktualisieren der R-Spalte, wenn die B-Spalte geändert wird
-    for change in grid_response['data_changed']:
-        if 'B' in change:
-            value = change['B']
-            index = change['index']
-            if value == 'ww':
-                if 15 <= data.loc[index, 'Zähne'] <= 25 or 34 <= data.loc[index, 'Zähne'] <= 44:
-                    data.loc[index, 'R'] = 'KV'
-                elif 16 <= data.loc[index, 'Zähne'] <= 18 or 26 <= data.loc[index, 'Zähne'] <= 28 or 35 <= data.loc[index, 'Zähne'] <= 38 or 45 <= data.loc[index, 'Zähne'] <= 48:
-                    data.loc[index, 'R'] = 'K'
-            elif value == 'x':
-                data.loc[index, 'R'] = 'E'
+    for index, row in grid_response['data'].iterrows():
+        if row['B'] == 'ww':
+            if 15 <= row['Zähne'] <= 25 or 34 <= row['Zähne'] <= 44:
+                grid_response['data'].loc[index, 'R'] = 'KV'
+            elif 16 <= row['Zähne'] <= 18 or 26 <= row['Zähne'] <= 28 or 35 <= row['Zähne'] <= 38 or 45 <= row['Zähne'] <= 48:
+                grid_response['data'].loc[index, 'R'] = 'K'
+        elif row['B'] == 'x':
+            grid_response['data'].loc[index, 'R'] = 'E'
                 
-    return data
+    return grid_response['data']
 
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
 for checkbox, data in zip(checkboxes, datasets):
     if checkbox:
         data = build_grid(data, b_options, tp_options)
+        AgGrid(data)  # Tabelle neu anzeigen
