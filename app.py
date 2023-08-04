@@ -39,7 +39,7 @@ def build_grid(data, options, tp_options):
         data_return_mode='as_input',  # Updates werden beim Editieren automatisch in den Dataframe übernommen
         update_mode='value_changed',
         fit_columns_on_grid_load=True,
-        allow_unsafe_jscode=True     # Erlaubt das Ausführen von Javascript Code
+        allow_unsafe_jscode=True,     # Erlaubt das Ausführen von Javascript Code
     )
     
     return grid_response['data']
@@ -47,19 +47,6 @@ def build_grid(data, options, tp_options):
 # Wenn der Session State noch nicht initialisiert wurde
 if "datasets" not in st.session_state:
     st.session_state["datasets"] = datasets
-
-# Erstellen der Grids und Speichern der Änderungen
-if st.button("Änderungen speichern"):
-    st.session_state["datasets"] = [build_grid(data, b_options, tp_options) for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])) if checkbox]
-
-# Anzeigen der aktualisierten Grids
-for i, (checkbox, data) in enumerate(zip(checkboxes, st.session_state["datasets"])):
-    if checkbox:
-        AgGrid(data, key=f"grid_view_{i}")
-
-
-
-
 
 # Anzeigen der Tabellen, wenn die Kästchen ausgewählt sind
 for i in range(4):
